@@ -437,6 +437,57 @@
         flex-direction: column;
       }
     }
+
+    /* تحسينات إضافية */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      background-color: #fefefe;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #888;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 500px;
+      text-align: center;
+    }
+    
+    .close {
+      color: #aaa;
+      float: left;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    
+    .close:hover {
+      color: black;
+    }
   </style>
 </head>
 <body>
@@ -543,7 +594,7 @@
         </div>
         
         <div class="buttons">
-          <button class="btn btn-primary" onclick="confirmOrder()">
+          <button class="btn btn-primary" onclick="confirmOrder()" id="confirmBtn">
             <i class="fas fa-check-circle"></i> تأكيد الطلب
           </button>
           <button class="btn btn-info" onclick="saveForLater()">
@@ -568,12 +619,35 @@
       <p>© 2023 جميع الحقوق محفوظة - متجر PIXRO</p>
       <p>هاتف: 966123456789+ | البريد الإلكتروني: info@pixro.com</p>
       <div class="footer-links">
-        <a href="#"><i class="fas fa-question-circle"></i> المساعدة</a>
-        <a href="#"><i class="fas fa-shield-alt"></i> الخصوصية</a>
-        <a href="#"><i class="fas fa-file-alt"></i> الشروط والأحكام</a>
-        <a href="#"><i class="fas fa-phone-alt"></i> اتصل بنا</a>
+        <a href="#" onclick="showHelp()"><i class="fas fa-question-circle"></i> المساعدة</a>
+        <a href="#" onclick="showPrivacy()"><i class="fas fa-shield-alt"></i> الخصوصية</a>
+        <a href="#" onclick="showTerms()"><i class="fas fa-file-alt"></i> الشروط والأحكام</a>
+        <a href="#" onclick="showContact()"><i class="fas fa-phone-alt"></i> اتصل بنا</a>
       </div>
     </footer>
+  </div>
+
+  <!-- نموذج التأكيد -->
+  <div id="confirmationModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('confirmationModal')">&times;</span>
+      <h2 id="modalTitle">تأكيد العملية</h2>
+      <p id="modalMessage">هل أنت متأكد من أنك تريد المتابعة؟</p>
+      <div class="buttons">
+        <button class="btn btn-primary" onclick="modalConfirm()">نعم</button>
+        <button class="btn btn-secondary" onclick="closeModal('confirmationModal')">إلغاء</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- نموذج المعلومات -->
+  <div id="infoModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('infoModal')">&times;</span>
+      <h2 id="infoModalTitle">معلومات</h2>
+      <p id="infoModalMessage">هنا سيتم عرض المعلومات المطلوبة</p>
+      <button class="btn btn-primary" onclick="closeModal('infoModal')">موافق</button>
+    </div>
   </div>
 
   <script>
@@ -588,6 +662,8 @@
     let discount = 0;
     let selectedPaymentMethod = "cash";
     let couponApplied = false;
+    let currentAction = null;
+    let actionData = null;
     
     // تحديث واجهة المنتج
     function updateProductDisplay() {
@@ -674,29 +750,42 @@
         return;
       }
       
-      let orders = JSON.parse(localStorage.getItem("orders")) || [];
-      orders.push({ 
-        product: product.name, 
-        price: product.price,
-        discount: discount,
-        total: parseFloat(document.getElementById("total").innerText),
-        name, 
-        discord,
-        email,
-        phone,
-        address,
-        city,
-        payment: selectedPaymentMethod,
-        date: new Date().toLocaleString()
-      });
+      // إظهار رسالة تحميل على زر التأكيد
+      const confirmBtn = document.getElementById("confirmBtn");
+      const originalText = confirmBtn.innerHTML;
+      confirmBtn.innerHTML = '<span class="loading"></span> جاري المعالجة...';
+      confirmBtn.disabled = true;
       
-      localStorage.setItem("orders", JSON.stringify(orders));
-      
-      showMessage("✅ تم إرسال طلبك بنجاح! سيتم التجهيز خلال 24 ساعة", "success");
-      
-      setTimeout(() => { 
-        window.location.href = "customer.html"; 
-      }, 3000);
+      // محاكاة عملية تأكيد الطلب
+      setTimeout(() => {
+        let orders = JSON.parse(localStorage.getItem("orders")) || [];
+        orders.push({ 
+          product: product.name, 
+          price: product.price,
+          discount: discount,
+          total: parseFloat(document.getElementById("total").innerText),
+          name, 
+          discord,
+          email,
+          phone,
+          address,
+          city,
+          payment: selectedPaymentMethod,
+          date: new Date().toLocaleString()
+        });
+        
+        localStorage.setItem("orders", JSON.stringify(orders));
+        
+        showMessage("✅ تم إرسال طلبك بنجاح! سيتم التجهيز خلال 24 ساعة", "success");
+        
+        // استعادة الزر إلى وضعه الأصلي
+        confirmBtn.innerHTML = originalText;
+        confirmBtn.disabled = false;
+        
+        setTimeout(() => { 
+          window.location.href = "customer.html"; 
+        }, 3000);
+      }, 2000);
     }
     
     // دالة إظهار الرسائل
@@ -713,17 +802,25 @@
     
     // دالة مواصلة التسوق
     function continueShopping() {
-      if (confirm("هل تريد مواصلة التسوق؟ سيتم حفظ البيانات التي أدخلتها.")) {
-        window.location.href = "products.html";
-      }
+      showConfirmationModal(
+        "مواصلة التسوق", 
+        "هل تريد مواصلة التسوق؟ سيتم حفظ البيانات التي أدخلتها.",
+        function() {
+          window.location.href = "products.html";
+        }
+      );
     }
     
     // دالة إلغاء الطلب
     function cancelOrder() {
-      if (confirm("هل أنت متأكد من إلغاء الطلب؟ سيتم حذف جميع البيانات.")) {
-        localStorage.removeItem("selectedProduct");
-        window.location.href = "index.html";
-      }
+      showConfirmationModal(
+        "إلغاء الطلب", 
+        "هل أنت متأكد من إلغاء الطلب؟ سيتم حذف جميع البيانات.",
+        function() {
+          localStorage.removeItem("selectedProduct");
+          window.location.href = "index.html";
+        }
+      );
     }
     
     // دالة حفظ الطلب للاحقًا
@@ -763,9 +860,60 @@
     
     // دالة الذهاب للصفحة الرئيسية
     function goToHome() {
-      if (confirm("هل تريد العودة للصفحة الرئيسية؟ سيتم فقدان أي بيانات غير محفوظة.")) {
-        window.location.href = "index.html";
+      showConfirmationModal(
+        "العودة للصفحة الرئيسية", 
+        "هل تريد العودة للصفحة الرئيسية؟ سيتم فقدان أي بيانات غير محفوظة.",
+        function() {
+          window.location.href = "index.html";
+        }
+      );
+    }
+    
+    // دالة إظهار نموذج التأكيد
+    function showConfirmationModal(title, message, callback) {
+      document.getElementById("modalTitle").innerText = title;
+      document.getElementById("modalMessage").innerText = message;
+      currentAction = callback;
+      document.getElementById("confirmationModal").style.display = "flex";
+    }
+    
+    // دالة إغلاق النموذج
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = "none";
+      currentAction = null;
+      actionData = null;
+    }
+    
+    // دالة تأكيد الإجراء في النموذج
+    function modalConfirm() {
+      if (currentAction) {
+        currentAction();
       }
+      closeModal('confirmationModal');
+    }
+    
+    // دالة إظهار نموذج المعلومات
+    function showInfoModal(title, message) {
+      document.getElementById("infoModalTitle").innerText = title;
+      document.getElementById("infoModalMessage").innerText = message;
+      document.getElementById("infoModal").style.display = "flex";
+    }
+    
+    // دوال روابط التذييل
+    function showHelp() {
+      showInfoModal("المساعدة", "للمساعدة يرجى التواصل على رقم الهاتف أو البريد الإلكتروني المذكور في الأسفل. فريق الدعم متاح من الأحد إلى الخميس من 8 صباحاً إلى 5 مساءً.");
+    }
+    
+    function showPrivacy() {
+      showInfoModal("سياسة الخصوصية", "نحن نحترم خصوصيتك. بياناتك الشخصية محمية ولا يتم مشاركتها مع أي طرف ثالث بدون موافقتك. نستخدم أحدث تقنيات التشفير لحماية معلوماتك.");
+    }
+    
+    function showTerms() {
+      showInfoModal("الشروط والأحكام", "بإكمال عملية الشراء أنت توافق على شروط وأحكام المتجر. المنتجات المباعة تخضع لضمان المصنع. للإرجاع أو الاستبدال يرجى مراجعة سياسة الإرجاع خلال 14 يومًا.");
+    }
+    
+    function showContact() {
+      showInfoModal("اتصل بنا", "هاتف: 966123456789+\nالبريد الإلكتروني: info@pixro.com\nالعنوان: الرياض، المملكة العربية السعودية\nساعات العمل: الأحد - الخميس: 8 ص - 5 م");
     }
     
     // تهيئة الصفحة عند التحميل
@@ -788,6 +936,23 @@
         
         showMessage("تم تحميل بياناتك المحفوظة مسبقًا", "success");
       }
+      
+      // إضافة تأثيرات للعناصر عند التمرير
+      const boxes = document.querySelectorAll('.box');
+      boxes.forEach(box => {
+        box.style.opacity = '0';
+        box.style.transform = 'translateY(20px)';
+        box.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      });
+      
+      setTimeout(() => {
+        boxes.forEach((box, index) => {
+          setTimeout(() => {
+            box.style.opacity = '1';
+            box.style.transform = 'translateY(0)';
+          }, index * 200);
+        });
+      }, 300);
     });
   </script>
 </body>
