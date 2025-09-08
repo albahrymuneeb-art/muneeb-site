@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نظام التسجيل - تسجيل الدخول</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #4361ee;
+      --secondary-color: #3a0ca3;
+      --success-color: #4cc9f0;
+      --error-color: #f72585;
+      --background-color: #f8f9fa;
+      --text-color: #2b2d42;
+      --light-color: #ffffff;
+      --border-radius: 12px;
+      --box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      color: var(--text-color);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .login-card {
+      background: var(--light-color);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      overflow: hidden;
+      transition: var(--transition);
+    }
+
+    .login-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    .header {
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: 25px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 1.8rem;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .header p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .form-container {
+      padding: 25px;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--text-color);
+      font-size: 0.9rem;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 14px 15px 14px 45px;
+      border: 2px solid #e2e8f0;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      transition: var(--transition);
+      outline: none;
+    }
+
+    .input-field:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 15px;
+      top: 40px;
+      color: #94a3b8;
+      font-size: 1.1rem;
+    }
+
+    .toggle-password {
+      position: absolute;
+      left: 15px;
+      top: 40px;
+      cursor: pointer;
+      color: #94a3b8;
+      font-size: 1.1rem;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+      transform: translateY(-2px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .message {
+      padding: 12px;
+      margin-top: 15px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    .error {
+      background-color: #ffe6ee;
+      color: var(--error-color);
+      border: 1px solid #ffc2d9;
+      display: block;
+    }
+
+    .success {
+      background-color: #e6f7ff;
+      color: var(--success-color);
+      border: 1px solid #b3e0ff;
+      display: block;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+
+    .loader {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        max-width: 100%;
+      }
+      
+      .login-card {
+        border-radius: 10px;
+      }
+      
+      .header {
+        padding: 20px;
+      }
+      
+      .form-container {
+        padding: 20px;
+      }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .shake {
+      animation: shake 0.5s ease-in-out;
+    }
+
+    @keyframes shake {
+      0%, 100% {transform: translateX(0);}
+      20%, 60% {transform: translateX(-5px);}
+      40%, 80% {transform: translateX(5px);}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="login-card fade-in">
+      <div class="header">
+        <h1><i class="fas fa-lock"></i> تسجيل الدخول</h1>
+        <p>من فضلك أدخل بياناتك للوصول إلى حسابك</p>
+      </div>
+      
+      <div class="form-container">
+        <div class="input-group">
+          <label for="username"><i class="fas fa-user"></i> اسم المستخدم</label>
+          <i class="fas fa-user input-icon"></i>
+          <input type="text" id="username" class="input-field" placeholder="أدخل اسم المستخدم" autocomplete="username">
+        </div>
+        
+        <div class="input-group">
+          <label for="password"><i class="fas fa-key"></i> كلمة المرور</label>
+          <i class="fas fa-key input-icon"></i>
+          <input type="password" id="password" class="input-field" placeholder="أدخل كلمة المرور" autocomplete="current-password">
+          <i class="fas fa-eye toggle-password" id="togglePassword"></i>
+        </div>
+        
+        <button type="button" id="loginBtn" class="btn">
+          <span>دخول</span>
+          <div class="loader" id="loader"></div>
+        </button>
+        
+        <div id="msg" class="message"></div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <p>© 2023 نظام التسجيل. جميع الحقوق محفوظة</p>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const loginBtn = document.getElementById('loginBtn');
+      const usernameInput = document.getElementById('username');
+      const passwordInput = document.getElementById('password');
+      const messageDiv = document.getElementById('msg');
+      const loader = document.getElementById('loader');
+      const togglePassword = document.getElementById('togglePassword');
+      const loginCard = document.querySelector('.login-card');
+      
+      // إضافة تأثير لعرض وإخفاء كلمة المرور
+      togglePassword.addEventListener('click', function() {
+        if (passwordInput.type === 'password') {
+          passwordInput.type = 'text';
+          togglePassword.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+          passwordInput.type = 'password';
+          togglePassword.classList.replace('fa-eye-slash', 'fa-eye');
+        }
+      });
+      
+      // تحسين وظيفة تسجيل الدخول
+      function login() {
+        const user = usernameInput.value.trim();
+        const pass = passwordInput.value.trim();
+        
+        // إعادة تعيين الرسالة
+        messageDiv.className = 'message';
+        messageDiv.textContent = '';
+        
+        // التحقق من صحة الإدخال
+        if (user === '') {
+          showMessage('رجاءً أدخل اسم المستخدم', 'error');
+          usernameInput.focus();
+          loginCard.classList.add('shake');
+          setTimeout(() => loginCard.classList.remove('shake'), 500);
+          return;
+        }
+        
+        if (pass === '') {
+          showMessage('رجاءً أدخل كلمة المرور', 'error');
+          passwordInput.focus();
+          loginCard.classList.add('shake');
+          setTimeout(() => loginCard.classList.remove('shake'), 500);
+          return;
+        }
+        
+        // عرض تحميل
+        loginBtn.disabled = true;
+        loader.style.display = 'block';
+        loginBtn.querySelector('span').textContent = 'جاري التحقق...';
+        
+        // محاكاة عملية التحقق (يمكن إزالة setTimeout في التطبيق الحقيقي)
+        setTimeout(() => {
+          if (user === "admin" && pass === "1234") {
+            showMessage('تم تسجيل الدخول كمسؤول بنجاح!', 'success');
+            localStorage.setItem("userType", "admin");
+            // الانتقال إلى صفحة المسؤول بعد تأخير بسيط
+            setTimeout(() => window.location.href = "admin.html", 1000);
+          } else {
+            showMessage('تم تسجيل الدخول كعميل بنجاح!', 'success');
+            localStorage.setItem("userType", "customer");
+            localStorage.setItem("customerName", user);
+            // الانتقال إلى صفحة العميل بعد تأخير بسيط
+            setTimeout(() => window.location.href = "customer.html", 1000);
+          }
+        }, 1500);
+      }
+      
+      // دالة لعرض الرسائل
+      function showMessage(text, type) {
+        messageDiv.textContent = text;
+        messageDiv.className = 'message ' + type;
+        
+        // إعادة تعيين زر التسجيل
+        loginBtn.disabled = false;
+        loader.style.display = 'none';
+        loginBtn.querySelector('span').textContent = 'دخول';
+      }
+      
+      // إضافة event listeners
+      loginBtn.addEventListener('click', login);
+      
+      // السماح بالدخول عند الضغط على Enter
+      usernameInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          login();
+        }
+      });
+      
+      passwordInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          login();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

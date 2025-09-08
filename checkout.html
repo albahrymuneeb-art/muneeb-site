@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إتمام الشراء - PIXRO</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #6A5ACD;
+      --secondary-color: #FF6B6B;
+      --accent-color: #4ECDC4;
+      --dark-color: #2F2F2F;
+      --light-color: #F8F9FA;
+      --success-color: #28a745;
+      --warning-color: #ffc107;
+      --info-color: #17a2b8;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f9f9f9 0%, #e6e6ff 100%);
+      color: #333;
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    /* تصميم الهيدر والشعار */
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+      width: 100%;
+    }
+    
+    .logo {
+      font-family: 'Arial', sans-serif;
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: var(--primary-color);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+      text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.1);
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    
+    .logo:hover {
+      transform: scale(1.05);
+    }
+    
+    .logo::after {
+      content: "";
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+      border-radius: 2px;
+    }
+    
+    .tagline {
+      color: var(--dark-color);
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+    }
+    
+    /* تصميم المحتوى الرئيسي */
+    .main-content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: center;
+    }
+    
+    .box {
+      border: 1px solid #ddd;
+      padding: 30px;
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      border-radius: 15px;
+      background: white;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+    
+    .order-summary {
+      background: linear-gradient(135deg, #6A5ACD 0%, #4ECDC4 100%);
+      color: white;
+    }
+    
+    h2 {
+      color: var(--primary-color);
+      margin-bottom: 20px;
+      position: relative;
+      display: inline-block;
+    }
+    
+    h2::after {
+      content: "";
+      position: absolute;
+      bottom: -8px;
+      right: 0;
+      width: 50%;
+      height: 3px;
+      background: var(--secondary-color);
+      border-radius: 3px;
+    }
+    
+    .order-summary h2 {
+      color: white;
+    }
+    
+    .order-summary h2::after {
+      background: white;
+    }
+    
+    .product-details {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+    }
+    
+    .product-image {
+      width: 80px;
+      height: 80px;
+      background: white;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 15px;
+      font-size: 2rem;
+      color: var(--primary-color);
+    }
+    
+    .product-info {
+      flex-grow: 1;
+    }
+    
+    .input-group {
+      margin-bottom: 20px;
+      text-align: right;
+      position: relative;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--dark-color);
+    }
+    
+    input, textarea, select {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+    
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--primary-color);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(106, 90, 205, 0.2);
+    }
+    
+    .input-icon {
+      position: absolute;
+      left: 15px;
+      top: 40px;
+      color: #aaa;
+    }
+    
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 25px;
+    }
+    
+    .btn {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      flex: 1;
+      min-width: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .btn-primary {
+      background: var(--primary-color);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: #5549b8;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(106, 90, 205, 0.4);
+    }
+    
+    .btn-secondary {
+      background: var(--secondary-color);
+      color: white;
+    }
+    
+    .btn-secondary:hover {
+      background: #ff5252;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+    }
+    
+    .btn-outline {
+      background: transparent;
+      color: var(--primary-color);
+      border: 2px solid var(--primary-color);
+    }
+    
+    .btn-outline:hover {
+      background: var(--primary-color);
+      color: white;
+    }
+    
+    .btn-warning {
+      background: var(--warning-color);
+      color: var(--dark-color);
+    }
+    
+    .btn-warning:hover {
+      background: #e0a800;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
+    }
+    
+    .btn-info {
+      background: var(--info-color);
+      color: white;
+    }
+    
+    .btn-info:hover {
+      background: #138496;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(23, 162, 184, 0.4);
+    }
+    
+    #msg {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 600;
+      display: none;
+    }
+    
+    .success {
+      background: rgba(40, 167, 69, 0.2);
+      color: var(--success-color);
+      border: 1px solid rgba(40, 167, 69, 0.3);
+      display: block;
+    }
+    
+    .error {
+      background: rgba(220, 53, 69, 0.2);
+      color: #dc3545;
+      border: 1px solid rgba(220, 53, 69, 0.3);
+      display: block;
+    }
+    
+    .warning {
+      background: rgba(255, 193, 7, 0.2);
+      color: #ffc107;
+      border: 1px solid rgba(255, 193, 7, 0.3);
+      display: block;
+    }
+    
+    .payment-options {
+      display: flex;
+      gap: 15px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+    
+    .payment-option {
+      flex: 1;
+      min-width: 120px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .payment-option:hover {
+      border-color: var(--primary-color);
+      transform: translateY(-3px);
+    }
+    
+    .payment-option.selected {
+      border-color: var(--primary-color);
+      background: rgba(106, 90, 205, 0.1);
+    }
+    
+    .payment-option i {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: var(--primary-color);
+    }
+    
+    .summary-details p {
+      margin: 10px 0;
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .summary-details hr {
+      margin: 15px 0;
+      border: 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .summary-details h3 {
+      margin-top: 15px;
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .coupon-section {
+      margin: 20px 0;
+      padding: 15px;
+      background: #f9f9f9;
+      border-radius: 10px;
+      display: flex;
+      gap: 10px;
+    }
+    
+    .coupon-input {
+      flex: 1;
+    }
+    
+    .btn-coupon {
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0 15px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    
+    .btn-coupon:hover {
+      background: #3dbbb4;
+    }
+    
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      color: var(--dark-color);
+      font-size: 0.9rem;
+      width: 100%;
+    }
+    
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 10px;
+    }
+    
+    .footer-links a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    
+    .footer-links a:hover {
+      color: var(--secondary-color);
+      text-decoration: underline;
+    }
+    
+    /* تصميم متجاوب */
+    @media (max-width: 768px) {
+      .main-content {
+        flex-direction: column;
+      }
+      
+      .logo {
+        font-size: 2.5rem;
+      }
+      
+      .btn {
+        width: 100%;
+      }
+      
+      .payment-options {
+        flex-direction: column;
+      }
+      
+      .coupon-section {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1 class="logo" onclick="goToHome()">pixro</h1>
+      <p class="tagline">متجرك الإلكتروني للأجهزة التقنية الحديثة</p>
+    </header>
+    
+    <div class="main-content">
+      <div class="box order-summary">
+        <h2><i class="fas fa-receipt"></i> ملخص الطلب</h2>
+        
+        <div class="product-details">
+          <div class="product-image">
+            <i class="fas fa-laptop"></i>
+          </div>
+          <div class="product-info">
+            <h3 id="productName">المنتج: غير محدد</h3>
+            <p id="productPrice">السعر: 0 ريال</p>
+            <p id="productDesc">وصف المنتج يظهر هنا</p>
+          </div>
+        </div>
+        
+        <div class="summary-details">
+          <p>السعر: <span id="price">0</span> ريال</p>
+          <p>الضريبة: <span id="tax">0</span> ريال</p>
+          <p>الشحن: <span id="shipping">0</span> ريال</p>
+          <p>الخصم: <span id="discount">0</span> ريال</p>
+          <hr>
+          <h3>المجموع: <span id="total">0</span> ريال</h3>
+        </div>
+        
+        <div class="coupon-section">
+          <input type="text" id="couponCode" class="coupon-input" placeholder="أدخل كود الخصم">
+          <button class="btn-coupon" onclick="applyCoupon()">تطبيق</button>
+        </div>
+      </div>
+      
+      <div class="box">
+        <h2><i class="fas fa-user-circle"></i> معلومات العميل</h2>
+        
+        <div class="input-group">
+          <label for="name"><i class="fas fa-user"></i> الاسم الكامل</label>
+          <i class="fas fa-user input-icon"></i>
+          <input type="text" id="name" placeholder="أدخل اسمك الكامل">
+        </div>
+        
+        <div class="input-group">
+          <label for="discord"><i class="fab fa-discord"></i> اسم حساب الديسكورد</label>
+          <i class="fab fa-discord input-icon"></i>
+          <input type="text" id="discord" placeholder="ادخل اسم حسابك ديسكورد">
+        </div>
+        
+        <div class="input-group">
+          <label for="email"><i class="fas fa-envelope"></i> البريد الإلكتروني</label>
+          <i class="fas fa-envelope input-icon"></i>
+          <input type="email" id="email" placeholder="أدخل بريدك الإلكتروني">
+        </div>
+        
+        <div class="input-group">
+          <label for="phone"><i class="fas fa-phone"></i> رقم الهاتف</label>
+          <i class="fas fa-phone input-icon"></i>
+          <input type="tel" id="phone" placeholder="أدخل رقم هاتفك">
+        </div>
+        
+        <div class="input-group">
+          <label for="address"><i class="fas fa-map-marker-alt"></i> العنوان</label>
+          <i class="fas fa-map-marker-alt input-icon"></i>
+          <textarea id="address" rows="3" placeholder="أدخل عنوانك بالتفصيل"></textarea>
+        </div>
+        
+        <div class="input-group">
+          <label for="city"><i class="fas fa-city"></i> المدينة</label>
+          <i class="fas fa-city input-icon"></i>
+          <select id="city">
+            <option value="">اختر المدينة</option>
+            <option value="riyadh">الرياض</option>
+            <option value="jeddah">جدة</option>
+            <option value="dammam">الدمام</option>
+            <option value="mecca">مكة</option>
+            <option value="medina">المدينة</option>
+          </select>
+        </div>
+        
+        <h3><i class="fas fa-credit-card"></i> طريقة الدفع</h3>
+        <div class="payment-options">
+          <div class="payment-option" onclick="selectPayment(this, 'cash')">
+            <i class="fas fa-money-bill-wave"></i>
+            <p>الدفع عند الاستلام</p>
+          </div>
+          <div class="payment-option" onclick="selectPayment(this, 'credit')">
+            <i class="fas fa-credit-card"></i>
+            <p>بطاقة ائتمان</p>
+          </div>
+          <div class="payment-option" onclick="selectPayment(this, 'apple')">
+            <i class="fab fa-apple-pay"></i>
+            <p>Apple Pay</p>
+          </div>
+          <div class="payment-option" onclick="selectPayment(this, 'mada')">
+            <i class="fas fa-credit-card"></i>
+            <p>مدى</p>
+          </div>
+        </div>
+        
+        <div class="buttons">
+          <button class="btn btn-primary" onclick="confirmOrder()">
+            <i class="fas fa-check-circle"></i> تأكيد الطلب
+          </button>
+          <button class="btn btn-info" onclick="saveForLater()">
+            <i class="fas fa-bookmark"></i> حفظ للاحقًا
+          </button>
+          <button class="btn btn-outline" onclick="continueShopping()">
+            <i class="fas fa-shopping-cart"></i> مواصلة التسوق
+          </button>
+          <button class="btn btn-warning" onclick="printOrder()">
+            <i class="fas fa-print"></i> طباعة
+          </button>
+          <button class="btn btn-secondary" onclick="cancelOrder()">
+            <i class="fas fa-times-circle"></i> إلغاء
+          </button>
+        </div>
+        
+        <p id="msg"></p>
+      </div>
+    </div>
+    
+    <footer>
+      <p>© 2023 جميع الحقوق محفوظة - متجر PIXRO</p>
+      <p>هاتف: 966123456789+ | البريد الإلكتروني: info@pixro.com</p>
+      <div class="footer-links">
+        <a href="#"><i class="fas fa-question-circle"></i> المساعدة</a>
+        <a href="#"><i class="fas fa-shield-alt"></i> الخصوصية</a>
+        <a href="#"><i class="fas fa-file-alt"></i> الشروط والأحكام</a>
+        <a href="#"><i class="fas fa-phone-alt"></i> اتصل بنا</a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // بيانات المنتج الافتراضية (سيتم استبدالها بالمنتج الفعلي)
+    let product = JSON.parse(localStorage.getItem("selectedProduct")) || {
+      name: "جهاز لوحي جديد",
+      price: 1499,
+      description: "أحدث الأجهزة اللوحية بتقنية عالية"
+    };
+    
+    // متغيرات إضافية
+    let discount = 0;
+    let selectedPaymentMethod = "cash";
+    let couponApplied = false;
+    
+    // تحديث واجهة المنتج
+    function updateProductDisplay() {
+      document.getElementById("productName").innerText = `المنتج: ${product.name}`;
+      document.getElementById("productPrice").innerText = `السعر: ${product.price} ريال`;
+      document.getElementById("productDesc").innerText = product.description;
+      
+      // حساب التكاليف الإضافية
+      const tax = product.price * 0.15;
+      const shipping = product.price > 1000 ? 0 : 25;
+      const total = product.price + tax + shipping - discount;
+      
+      // تحديث ملخص الطلب
+      document.getElementById("price").innerText = product.price;
+      document.getElementById("tax").innerText = tax;
+      document.getElementById("shipping").innerText = shipping;
+      document.getElementById("discount").innerText = discount;
+      document.getElementById("total").innerText = total;
+    }
+    
+    // دالة اختيار طريقة الدفع
+    function selectPayment(element, method) {
+      // إزالة التحديد من جميع الخيارات
+      document.querySelectorAll('.payment-option').forEach(opt => {
+        opt.classList.remove('selected');
+      });
+      
+      // إضافة التحديد للخيار المختار
+      element.classList.add('selected');
+      selectedPaymentMethod = method;
+    }
+    
+    // دالة تطبيق كوبون الخصم
+    function applyCoupon() {
+      const couponCode = document.getElementById("couponCode").value;
+      
+      if (couponApplied) {
+        showMessage("⚠️ لقد استخدمت كوبون خصم مسبقًا", "warning");
+        return;
+      }
+      
+      // قائمة بكوبونات الخصم المتاحة (يمكن جلبها من قاعدة بيانات)
+      const validCoupons = {
+        "PIXRO10": 10,
+        "WELCOME15": 15,
+        "TECH20": 20
+      };
+      
+      if (couponCode in validCoupons) {
+        discount = (product.price * validCoupons[couponCode]) / 100;
+        couponApplied = true;
+        updateProductDisplay();
+        showMessage(`✅ تم تطبيق كوبون الخصم بنجاح! وفرت ${discount} ريال`, "success");
+      } else {
+        showMessage("⚠️ كود الخصم غير صالح أو منتهي الصلاحية", "error");
+      }
+    }
+    
+    // دالة تأكيد الطلب
+    function confirmOrder() {
+      let name = document.getElementById("name").value;
+      let discord = document.getElementById("discord").value;
+      let email = document.getElementById("email").value;
+      let phone = document.getElementById("phone").value;
+      let address = document.getElementById("address").value;
+      let city = document.getElementById("city").value;
+      
+      if (!name || !discord || !email || !phone || !address || !city) {
+        showMessage("⚠️ يرجى إدخال جميع البيانات المطلوبة", "error");
+        return;
+      }
+      
+      // التأكد من اختيار طريقة دفع
+      const selectedPayment = document.querySelector('.payment-option.selected');
+      if (!selectedPayment) {
+        showMessage("⚠️ يرجى اختيار طريقة الدفع", "error");
+        return;
+      }
+      
+      // التحقق من صحة البريد الإلكتروني
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        showMessage("⚠️ يرجى إدخال بريد إلكتروني صحيح", "error");
+        return;
+      }
+      
+      let orders = JSON.parse(localStorage.getItem("orders")) || [];
+      orders.push({ 
+        product: product.name, 
+        price: product.price,
+        discount: discount,
+        total: parseFloat(document.getElementById("total").innerText),
+        name, 
+        discord,
+        email,
+        phone,
+        address,
+        city,
+        payment: selectedPaymentMethod,
+        date: new Date().toLocaleString()
+      });
+      
+      localStorage.setItem("orders", JSON.stringify(orders));
+      
+      showMessage("✅ تم إرسال طلبك بنجاح! سيتم التجهيز خلال 24 ساعة", "success");
+      
+      setTimeout(() => { 
+        window.location.href = "customer.html"; 
+      }, 3000);
+    }
+    
+    // دالة إظهار الرسائل
+    function showMessage(text, type) {
+      const msgElement = document.getElementById("msg");
+      msgElement.innerText = text;
+      msgElement.className = type;
+      
+      // إخفاء الرسالة تلقائيًا بعد 5 ثواني
+      setTimeout(() => {
+        msgElement.style.display = 'none';
+      }, 5000);
+    }
+    
+    // دالة مواصلة التسوق
+    function continueShopping() {
+      if (confirm("هل تريد مواصلة التسوق؟ سيتم حفظ البيانات التي أدخلتها.")) {
+        window.location.href = "products.html";
+      }
+    }
+    
+    // دالة إلغاء الطلب
+    function cancelOrder() {
+      if (confirm("هل أنت متأكد من إلغاء الطلب؟ سيتم حذف جميع البيانات.")) {
+        localStorage.removeItem("selectedProduct");
+        window.location.href = "index.html";
+      }
+    }
+    
+    // دالة حفظ الطلب للاحقًا
+    function saveForLater() {
+      let name = document.getElementById("name").value;
+      let discord = document.getElementById("discord").value;
+      let email = document.getElementById("email").value;
+      let phone = document.getElementById("phone").value;
+      let address = document.getElementById("address").value;
+      let city = document.getElementById("city").value;
+      
+      if (!name || !discord || !email || !phone || !address || !city) {
+        showMessage("⚠️ يرجى إدخال جميع البيانات المطلوبة أولاً", "error");
+        return;
+      }
+      
+      const savedOrder = {
+        product: product.name, 
+        price: product.price,
+        name, 
+        discord,
+        email,
+        phone,
+        address,
+        city,
+        savedAt: new Date().toLocaleString()
+      };
+      
+      localStorage.setItem("savedOrder", JSON.stringify(savedOrder));
+      showMessage("✅ تم حفظ الطلب بنجاح، يمكنك إكماله لاحقًا", "success");
+    }
+    
+    // دالة الطباعة
+    function printOrder() {
+      window.print();
+    }
+    
+    // دالة الذهاب للصفحة الرئيسية
+    function goToHome() {
+      if (confirm("هل تريد العودة للصفحة الرئيسية؟ سيتم فقدان أي بيانات غير محفوظة.")) {
+        window.location.href = "index.html";
+      }
+    }
+    
+    // تهيئة الصفحة عند التحميل
+    document.addEventListener('DOMContentLoaded', function() {
+      // تحديد أول طريقة دفع افتراضيًا
+      document.querySelector('.payment-option').classList.add('selected');
+      
+      // تحديث عرض المنتج
+      updateProductDisplay();
+      
+      // تحميل البيانات المحفوظة إن وجدت
+      const savedOrder = JSON.parse(localStorage.getItem("savedOrder"));
+      if (savedOrder) {
+        document.getElementById("name").value = savedOrder.name || "";
+        document.getElementById("discord").value = savedOrder.discord || "";
+        document.getElementById("email").value = savedOrder.email || "";
+        document.getElementById("phone").value = savedOrder.phone || "";
+        document.getElementById("address").value = savedOrder.address || "";
+        document.getElementById("city").value = savedOrder.city || "";
+        
+        showMessage("تم تحميل بياناتك المحفوظة مسبقًا", "success");
+      }
+    });
+  </script>
+</body>
+</html>
